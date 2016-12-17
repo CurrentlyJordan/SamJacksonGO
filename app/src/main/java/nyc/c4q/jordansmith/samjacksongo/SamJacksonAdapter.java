@@ -7,6 +7,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+
 import java.util.List;
 
 import nyc.c4q.jordansmith.samjacksongo.Model.SamJackson;
@@ -35,7 +37,7 @@ public class SamJacksonAdapter extends RecyclerView.Adapter<SamJacksonAdapter.Sa
     @Override
     public void onBindViewHolder(final SamJacksonViewHolder holder, int position) {
         holder.name_text_view.setText(samJacksonList.get(position).getName());
-        holder.sam_jackson_image_view.setImageResource(samJacksonList.get(position).getImage());
+        Glide.with(holder.itemView.getContext()).load(samJacksonList.get(position).getImageUrl()).centerCrop().into(holder.sam_jackson_image_view);
 
         holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
@@ -44,6 +46,15 @@ public class SamJacksonAdapter extends RecyclerView.Adapter<SamJacksonAdapter.Sa
                 return true;
             }
         });
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                listener.onSamJacksonShortClicked(samJacksonList.get(holder.getAdapterPosition()));
+            }
+        });
+
+
 
 
 

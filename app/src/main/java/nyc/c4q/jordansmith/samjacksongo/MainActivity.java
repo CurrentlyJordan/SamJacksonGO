@@ -1,5 +1,6 @@
 package nyc.c4q.jordansmith.samjacksongo;
 
+import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -19,6 +20,7 @@ import static nl.qbusict.cupboard.CupboardFactory.cupboard;
 public class MainActivity extends AppCompatActivity implements SamJacksonAdapter.Listener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
+    static final String DETAIL_ACTIVITY = "go to detail screen";
     private RecyclerView samjacksonRecyclerview;
     private SQLiteDatabase db;
     private SamJacksonAdapter adapter;
@@ -34,15 +36,9 @@ public class MainActivity extends AppCompatActivity implements SamJacksonAdapter
         SamJacksonDatabaseHelper dbHelper = SamJacksonDatabaseHelper.getInstance(this);
         db = dbHelper.getWritableDatabase();
 
-//        samJacksonList = new ArrayList<>();
-//
-//        samJacksonList.add(new SamJackson("Pulp Fiction"));
-//        samJacksonList.add(new SamJackson("Black Snake Moan"));
-//        samJacksonList.add(new SamJackson("The Spirit"));
-//        samJacksonList.add(new SamJackson("That Scottish Movie"));
-        if (savedInstanceState == null) {
 
-            addSamJackson(new SamJackson("brushy", "Pulp Fiction"));
+        if (savedInstanceState == null) {
+            addSamJackson(new SamJackson().randomTransform());
         }
 
         samjacksonRecyclerview = (RecyclerView) findViewById(R.id.sam_jackson_recyclerview);
@@ -83,13 +79,15 @@ public class MainActivity extends AppCompatActivity implements SamJacksonAdapter
 
     @Override
     public void onSamJacksonLongClicked(SamJackson sam) {
-        Toast.makeText(this, "I've had it!", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, sam.getDeleteMessage(), Toast.LENGTH_SHORT).show();
         cupboard().withDatabase(db).delete(sam);
         refreshSamJacksonList();
     }
 
     @Override
     public void onSamJacksonShortClicked(SamJackson sam) {
-
+        Intent intent = new Intent(this, DetailScreenActivity.class);
+        intent.putExtra(DETAIL_ACTIVITY, sam);
+        startActivity(intent);
     }
 }
