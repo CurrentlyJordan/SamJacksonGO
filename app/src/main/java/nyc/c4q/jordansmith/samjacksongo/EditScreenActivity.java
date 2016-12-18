@@ -50,8 +50,7 @@ public class EditScreenActivity extends AppCompatActivity implements View.OnClic
             String newName = nameEditText.getText().toString();
             ContentValues contentValues = new ContentValues(1);
             contentValues.put("name", newName);
-            long whatever = samJackson.getId();
-            cupboard().withDatabase(db).update(SamJackson.class, contentValues);
+            cupboard().withDatabase(db).update(SamJackson.class, contentValues, "uniqueId = ?", samJackson.getuniqueId());
             Intent intent = new Intent(this,MainActivity.class);
             startActivity(intent);
 

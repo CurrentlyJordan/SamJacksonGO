@@ -111,6 +111,6 @@ public class MainActivity extends AppCompatActivity implements SamJacksonAdapter
         AlarmManager alarm = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
 
         alarm.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
-                20000 * 10, pendingIntent);
+                1000 * 60 * 5, pendingIntent);
     }
 }

@@ -1,6 +1,8 @@
 package nyc.c4q.jordansmith.samjacksongo.Model;
 
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 /**
@@ -16,19 +18,49 @@ public class SamJackson implements Serializable {
     private String gifUrl;
     private String deleteMessage;
     private String quote;
+    private String uniqueId;
+    private static Map<String, String> idMap = new HashMap<>();
 
 
     public SamJackson() {
         this.name = "Unknown";
         this.movie = "unkown";
+        uniqueId = checkidMap(generateUniqueId());
     }
 
-    public SamJackson(String name, String movie){
+    private String generateUniqueId() {
+        String output = "";
+        for (int i = 0; i < 6; i++) {
+            Random rand = new Random();
+            int randDigit = rand.nextInt(10);
+            output = "" + randDigit;
+        }
+        return output;
+    }
+
+    private String checkidMap(String generatedId) {
+        boolean randomAchieved = false;
+        while (!randomAchieved) {
+            if (!idMap.containsKey(generatedId)) {
+                randomAchieved = true;
+            } else {
+                generatedId = generateUniqueId();
+            }
+        }
+        return generatedId;
+    }
+
+    public String getuniqueId(){
+        return uniqueId;
+    }
+
+
+    public SamJackson(String name, String movie) {
         this.name = name;
         this.movie = movie;
     }
 
-    public SamJackson(String name, String movie, String imageUrl, String gifUrl){
+    public SamJackson(String name, String movie, String imageUrl, String gifUrl) {
         this.name = name;
         this.movie = movie;
         this.imageUrl = imageUrl;
@@ -80,10 +112,10 @@ public class SamJackson implements Serializable {
         return _id;
     }
 
-    public SamJackson randomTransform(){
+    public SamJackson randomTransform() {
         Random random = new Random();
-        int randNumber = random.nextInt(3) + 1;
-        switch(randNumber){
+        int randNumber = random.nextInt(4) + 1;
+        switch (randNumber) {
             case 1:
                 return frozone();
             case 2:
@@ -97,18 +129,18 @@ public class SamJackson implements Serializable {
         }
     }
 
-    public SamJackson frozone(){
+    public SamJackson frozone() {
         SamJackson samJackson = new SamJackson();
         samJackson.name = "Frozone";
         samJackson.movie = "The Incredibles";
         samJackson.imageUrl = "http://orig14.deviantart.net/e122/f/2011/076/f/d/frozone_by_riddsorensen-d3bvpwg.jpg";
         samJackson.gifUrl = "http://i.giphy.com/Bp82qbZ7CeIiA.gif";
-        samJackson.deleteMessage ="HONEY, WHERE'S MY SUPER SUIT";
+        samJackson.deleteMessage = "HONEY, WHERE'S MY SUPER SUIT";
         samJackson.quote = "Now Freeze";
         return samJackson;
     }
 
-    public SamJackson jules(){
+    public SamJackson jules() {
         SamJackson samJackson = new SamJackson();
         samJackson.name = "Jules";
         samJackson.movie = "Pulp Fiction";
@@ -119,18 +151,18 @@ public class SamJackson implements Serializable {
         return samJackson;
     }
 
-    public SamJackson nickFury(){
+    public SamJackson nickFury() {
         SamJackson samJackson = new SamJackson();
         samJackson.name = "Nick Fury";
         samJackson.movie = "The Avengers";
         samJackson.imageUrl = "http://www.hallereyecenter.com/wp-content/uploads/2014/07/trauma.jpg";
         samJackson.gifUrl = "http://i.giphy.com/9D7rSsb3V16Jq.gif";
-        samJackson.deleteMessage ="AVENGERS DISASSEMBLE!";
+        samJackson.deleteMessage = "AVENGERS DISASSEMBLE!";
         samJackson.quote = "Welcome to the Avengers Anitiative";
         return samJackson;
     }
 
-    public SamJackson mrGlass(){
+    public SamJackson mrGlass() {
         SamJackson samJackson = new SamJackson();
         samJackson.name = "Mr. Glass";
         samJackson.movie = "Unbreakable";
