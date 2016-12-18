@@ -1,5 +1,8 @@
 package nyc.c4q.jordansmith.samjacksongo;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -10,6 +13,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import nl.qbusict.cupboard.QueryResultIterable;
@@ -22,7 +26,7 @@ public class MainActivity extends AppCompatActivity implements SamJacksonAdapter
     private static final String TAG = MainActivity.class.getSimpleName();
     static final String DETAIL_ACTIVITY = "go to detail screen";
     private RecyclerView samjacksonRecyclerview;
-    private SQLiteDatabase db;
+    private static SQLiteDatabase db;
     private SamJacksonAdapter adapter;
 
 
@@ -36,10 +40,10 @@ public class MainActivity extends AppCompatActivity implements SamJacksonAdapter
         SamJacksonDatabaseHelper dbHelper = SamJacksonDatabaseHelper.getInstance(this);
         db = dbHelper.getWritableDatabase();
 
-
-        if (savedInstanceState == null) {
-            addSamJackson(new SamJackson().randomTransform());
-        }
+//
+//        if (savedInstanceState == null) {
+//            addSamJackson(new SamJackson().randomTransform());
+//        }
 
         samjacksonRecyclerview = (RecyclerView) findViewById(R.id.sam_jackson_recyclerview);
 
@@ -48,10 +52,11 @@ public class MainActivity extends AppCompatActivity implements SamJacksonAdapter
         GridLayoutManager manager = new GridLayoutManager(this, 2);
         samjacksonRecyclerview.setLayoutManager(manager);
         samjacksonRecyclerview.setAdapter(adapter);
+        scheduleAlarm();
 
     }
 
-    private void addSamJackson(SamJackson sam) {
+    public static void addSamJackson(SamJackson sam) {
         cupboard().withDatabase(db).put(sam);
     }
 
@@ -89,5 +94,23 @@ public class MainActivity extends AppCompatActivity implements SamJacksonAdapter
         Intent intent = new Intent(this, DetailScreenActivity.class);
         intent.putExtra(DETAIL_ACTIVITY, sam);
         startActivity(intent);
+    }
+
+    public void scheduleAlarm() {
+
+        // Construct an intent that will execute the AlarmReceiver
+        Intent intent = new Intent(getApplicationContext(), MyAlarmReciever.class);
+
+        // Create a PendingIntent to be triggered when the alarm goes off
+        final PendingIntent pendingIntent = PendingIntent.getBroadcast(this, MyAlarmReciever.REQUEST_CODE, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(System.currentTimeMillis());
+
+        long firstMillis = System.currentTimeMillis(); // alarm is set right away
+
+        AlarmManager alarm = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
+
+        alarm.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
+                20000 * 10, pendingIntent);
     }
 }
